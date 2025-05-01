@@ -1,0 +1,88 @@
+Model folder : for data model like USER , TRANSACTIONS
+Storage folder : Data storage using DSA (HashMap, LinkedList, etc.)
+Service folder: Business logic (Transaction processing)
+controller: API endpoints (REST controllers)
+Utils : Helper functions for formatting ,validation
+PhonepeApp.java : main spring Boot Application
+
+
+want to build phonepe clone website where frontend will be react and backend will be pure java and dsa based how the file structure and how to create in vs code
+phonepe :
+frontend folder
+backend folder
+
+IN RESTAPI
+http://localhost:9090/users/register
+{
+"userId": "102",
+"accountNo": "123456789",
+"name": "shravni  Doe",
+"ifscCode": "HDFC0001234",
+"Bank": "HDFC Bank",
+"Branch": "Mumbai",
+"MobileNo": "9876543210"
+}
+
+you will get msg : user registered successfully !!
+
+For retriving : GET
+http://localhost:9090/users/101
+
+output
+{
+"userId": "101",
+"accountNo": "123456789",
+"name": "John Doe",
+"ifscCode": "HDFC0001234",
+"Bank": "HDFC Bank",
+"Branch": "Mumbai",
+"MobileNo": "9876543210"
+}
+
+for listing all :
+http://localhost:9090/users/all
+get
+
+{
+"101": {
+"userId": "101",
+"accountNo": "123456789",
+"name": "John Doe",
+"ifscCode": "HDFC0001234",
+"branch": null,
+"bank": null,
+"mobileNo": null
+},
+"102": {
+"userId": "102",
+"accountNo": "912352642",
+"name": "Vaishnavi Doe",
+"ifscCode": "SBINOO7165",
+"branch": null,
+"bank": null,
+"mobileNo": null
+}
+
+
+}
+
+
+{
+    "userId": "103",
+    "accountNo": "123456789",
+    "name": "Vaishnavi Ahire",
+    "ifscCode": "HDFC0001234",
+    "Bank": "HDFC Bank",
+    "Branch": "Mumbai",
+    "MobileNo": "9876543210"
+    }
+
+
+    http://localhost:9191/api/auth/users/signup
+http://localhost:9191/api/auth/login
+
+
+{
+  "username": "VaishnaviAhire", 
+  "password": "admin@456" 
+}

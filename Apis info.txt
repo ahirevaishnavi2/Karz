@@ -1,0 +1,376 @@
+{
+ "username" :"ravi123", 
+  "password": "securePassword"
+} for login http://localhost:9191/users/login
+
+
+
+http://localhost:9191/users/all: get all users
+
+
+http://localhost:9191/roles/user/ALT123XYZ : get roles user based on userId
+
+http://localhost:9191/roles/submit: post role 
+{
+  "userId": "ALT123XYZ",
+  "role": "lender"
+}
+
+
+to see uploads 
+http://localhost:9191/uploads/user/ALT123XYZ
+
+http://localhost:9191/scores/update  : UPDATE SCORE
+
+
+
+ 1. /finance/upload-bank-statement
+Method: POST
+Content-Type: multipart/form-data
+
+📝 Sample CSV Content (bank-statement.csv)
+csv
+Copy code
+Date,Description,Amount
+2024-01-10,Credit Salary,50000
+2024-02-11,ATM Withdrawal,-10000
+2024-03-05,Online Purchase,-1500
+2024-04-02,Credit Bonus,20000
+📦 How to Send (Postman or curl)
+Postman:
+
+Set method to POST
+
+Set URL to: http://localhost:8080/finance/upload-bank-statement
+
+Under Body > form-data:
+
+Key: file (type = File)
+
+Value: (select your CSV file)
+
+curl:
+
+bash
+Copy code
+curl -X POST http://localhost:8080/finance/upload-bank-statement \
+  -F "file=@bank-statement.csv"
+✅ 2. /finance/borrower/request
+Method: POST
+Content-Type: application/json
+
+📥 Sample JSON Payload
+json
+Copy code
+{
+  "name": "Aman",
+  "location": "Pune",
+  "roi": 11.0,
+  "duration": 12,
+  "amount": 8000,
+  "filterBy": "location"
+}
+This will return a list of matching lenders based on Pune location and ROI ≤ 11.0.
+
+curl Example:
+
+bash
+Copy code
+curl -X POST http://localhost:8080/finance/borrower/request \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "Aman",
+        "location": "Pune",
+        "roi": 11.0,
+        "duration": 12,
+        "amount": 8000,
+        "filterBy": "location"
+      }'
+✅ 3. /finance/lender/review
+Method: POST
+Content-Type: application/json
+
+📥 Sample JSON Payload
+json
+Copy code
+{
+  "name": "Shruti",
+  "location": "Pune",
+  "roi": 10.5,
+  "maxDuration": 12,
+  "availableAmount": 100000
+}
+Returns: List of borrower requests (mocked in code) with decisions "Accepted" or "Declined".
+
+curl Example:
+
+bash
+Copy code
+curl -X POST http://localhost:8080/finance/lender/review \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "Shruti",
+        "location": "Pune",
+        "roi": 10.5,
+        "maxDuration": 12,
+        "availableAmount": 100000
+      }'
+
+
+1. ScoreController
+API: /scores/update
+
+Method: POST
+
+Input Sample (JSON Body):
+
+json
+Copy code
+{
+  "userId": "user123",
+  "score": 75
+}
+Description: This endpoint updates the score for a user.
+
+Expected Output:
+
+json
+Copy code
+"Score updated successfully!"
+API: /scores/{userId}
+
+Method: GET
+
+Input Sample (URL):
+
+bash
+Copy code
+GET /scores/user123
+Expected Output:
+
+json
+Copy code
+{
+  "userId": "user123",
+  "score": 75
+}
+API: /scores/upload
+
+Method: POST
+
+Input Sample (Form-Data):
+
+file: A CSV or other file containing score data (e.g., user_scores.csv).
+
+userId: user123
+
+Expected Output:
+
+json
+Copy code
+"File uploaded and score calculated successfully!"
+2. CreditRoleController
+API: /roles/submit
+
+Method: POST
+
+Input Sample (JSON Body):
+
+json
+Copy code
+{
+  "userId": "user123",
+  "role": "lender",
+  "status": "active"
+}
+Description: This endpoint creates or updates a user's role.
+
+Expected Output:
+
+json
+Copy code
+"Role saved successfully!"
+API: /roles/user/{userId}
+
+Method: GET
+
+Input Sample (URL):
+
+sql
+Copy code
+GET /roles/user/user123
+Expected Output:
+
+json
+Copy code
+[
+  {
+    "userId": "user123",
+    "role": "lender",
+    "status": "active"
+  }
+]
+API: /roles/all
+
+Method: GET
+
+Input Sample:
+
+sql
+Copy code
+GET /roles/all
+Expected Output:
+
+json
+Copy code
+[
+  {
+    "userId": "user123",
+    "role": "lender",
+    "status": "active"
+  },
+  {
+    "userId": "user456",
+    "role": "borrower",
+    "status": "inactive"
+  }
+]
+API: /roles/{id}
+
+Method: DELETE
+
+Input Sample (URL):
+
+bash
+Copy code
+DELETE /roles/roleId123
+Expected Output:
+
+json
+Copy code
+"Role deleted successfully!"
+3. FinanceController
+API: /finance/upload-bank-statement
+
+Method: POST
+
+Input Sample (Form-Data):
+
+file: A CSV or Excel file with bank statement data (e.g., bank_statement.csv).
+
+Expected Output:
+
+json
+Copy code
+85.5
+API: /finance/borrower/request
+
+Method: POST
+
+Input Sample (JSON Body):
+
+json
+Copy code
+{
+  "userId": "borrower123",
+  "requestedAmount": 15000,
+  "requestedDuration": 12,
+  "maxInterestRate": 12.5
+}
+Expected Output (List of matched lenders):
+
+json
+Copy code
+[
+  {
+    "userId": "lender123",
+    "name": "Lender1",
+    "interestRate": 10.5,
+    "durationMonths": 12,
+    "amount": 20000
+  }
+]
+API: /finance/lender/review
+
+Method: POST
+
+Input Sample (JSON Body):
+
+json
+Copy code
+{
+  "lenderId": "lender123",
+  "loanRequests": [
+    {
+      "borrowerId": "borrower123",
+      "amount": 15000,
+      "duration": 12,
+      "creditScore": 80
+    }
+  ]
+}
+Expected Output:
+
+json
+Copy code
+[
+  {
+    "borrowerId": "borrower123",
+    "status": "approved",
+    "comment": "Matched with lender"
+  }
+]
+4. LoanController
+API: /lender/profile
+
+Method: POST
+
+Input Sample (JSON Body):
+
+json
+Copy code
+{
+  "id": 101,
+  "name": "Lender1",
+  "location": "Pune",
+  "roi": 10.5,
+  "maxDuration": 12,
+  "availableAmount": 10000
+}
+Expected Output:
+
+json
+Copy code
+"Lender profile updated: Lender1"
+API: /lender/match
+
+Method: POST
+
+Input Sample (JSON Body):
+
+json
+Copy code
+{
+  "userId": "Pune",
+  "amount": 10000,
+  "durationMonths": 12,
+  "interestRate": 10.5,
+  "status": "pending",
+  "createdAt": "2025-04-13T12:00:00.000+0000"
+}
+Expected Output (List of matched lenders):
+
+json
+Copy code
+[
+  {
+    "id": 101,
+    "name": "Lender1",
+    "location": "Pune",
+    "roi": 10.5,
+    "maxDuration": 12,
+    "availableAmount": 10000
+  }
+]
+
+
